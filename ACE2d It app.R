@@ -12,16 +12,6 @@ library(hrbrthemes)
 library(plotly)
 library(ggthemes)
 
-#### READING IN THE OVERALL DEATHS FROM LIAM
-
-liamoveralldeaths <- read_excel("~/Desktop/Capstone/R/Playing-with-shiny/WyMortForecast-master/Organized liam data.xlsx", sheet = "OverallDeaths")
-
-liamoveralldeathsshort <- liamoveralldeaths %>% pivot_longer(cols = 2:24, "County", "value", names_ptypes = list)
-
-liamoveralldeathsshort <- liamoveralldeathsshort %>% rename(Month = ...1)
-
-liamoveralldeathsshort$Month <- factor(liamoveralldeathsshort$Month, levels = c("January", "February","March", "April", "May", "June", "July", "August", "September", "October","November", "December"))
-
 #### READING IN THE HEAT MAP
 
 heat <- read_excel("~/Desktop/Capstone/R/Playing-with-shiny/WyMortForecast-master/HeatmapData.xlsx")
@@ -36,6 +26,10 @@ heat$Month <- factor(heat$Month, levels=unique(heat$Month))
 heatmap <- ggplot(heat, aes(Month, County, fill= Excess)) +
     geom_tile() +
     scale_fill_gradient(low="white", high="red")
+
+#### READING IN THE SEM DATA
+
+sem.data <- read_excel("~/Desktop/Capstone/R/Playing-with-shiny/WyMortForecast-master/SEM Data .xlsx")
 
 #### NOW START SHINY APP AFTER EVERYTHING (EXCEPT PLOTS) IS READ IN OR DEFINED
 
@@ -54,7 +48,7 @@ ui <- dashboardPage(
                      menuSubItem("Heatmap", tabName = "z"),
                      menuSubItem("Line Graph", tabName = "y")),
             
-            menuItem("SEM Data", tabName = "d", icon = icon(""))
+            menuItem("SEM Data", tabName = "d", icon = icon("cog"))
         )
     ),
     #box and and plot need width and height definition
