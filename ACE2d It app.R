@@ -58,8 +58,8 @@ ui <- dashboardPage(
             tabItem(tabName = "a",
                     h2("Welcome!"),
                     fluidPage(
-                        box(width = "600px", height = "100%",
-                            imageOutput("Concept", width = "550px", height = "100%")
+                        box(width = "auto", height = "auto",
+                            imageOutput("Model", width = "auto", height = "auto")
                         )
                     )
             ),#Close tabItem a
@@ -68,7 +68,7 @@ ui <- dashboardPage(
                     h3("Project Abstract"),
                     fluidPage(
                         box(
-                            textOutput("abstract"), width = "300px",))
+                            textOutput("abstract"), width = "300px"), width = "600px", height = "100%")
             ), #Close tabItem b
             
             tabItem(tabName = "c"
@@ -104,7 +104,7 @@ ui <- dashboardPage(
             tabItem(tabName = "z",
                     h2("Heatmap of Excess Deaths"),
                     fluidRow(
-                        box(plotOutput("heatmap", width = "600px"), width = "5px", height = "500px")), 
+                        box(plotOutput("heatmap", width = "600px"), width = "600px", height = "100%")), 
                     fluidRow(
                         box(textOutput("A1")),
                         box(textOutput("H1"))
@@ -113,8 +113,10 @@ ui <- dashboardPage(
             tabItem(tabName = "y",
                     h2("Line Graph of Excess Deaths"),
                     fluidPage(
-                        box(imageOutput("Line"))
-                    )),
+                        box(width = "600px", height = "100%",
+                            imageOutput("Line", width = "auto", height = "auto"))
+                        )
+                    ),
             
             tabItem(tabName = "d",
                     h2("SEM Data"),
@@ -136,6 +138,30 @@ ui <- dashboardPage(
 server <- function(input, output){
     set.seed(122)
     
+    output$Model <- renderImage({
+        Modelc <- normalizePath(file.path("~/Desktop/RShinyFolder/Pictures/",
+                                                paste("Modelc", input$n, ".png", sep = "")))
+        
+        list(src = Modelc,
+             alt = paste("This image is having touble loading", input$n))
+    }, deleteFile = FALSE)
+    
+    output$Line <- renderImage({
+        Line <- normalizePath(file.path("~/Desktop/RShinyFolder/Pictures2/",
+                                                paste("Line", input$n, ".png", sep = "")))
+        
+        list(src = Line,
+             alt = paste("This image is having touble loading", input$n))
+   }, deleteFile = FALSE)
+    
+    output$WPH <- renderImage({
+        WPH <- normalizePath(file.path("~/Desktop/RShinyFolder/Pictures2/",
+                                        paste("WPH", input$n, ".png", sep = "")))
+        
+        list(src = WPH,
+             alt = paste("This image is having touble loading", input$n))
+    }, deleteFile = FALSE)
+    
     #Textsearch <- reactive(input$searchText)
     #Buttonsearch <- reactive(input$searchButton)
     
@@ -147,9 +173,6 @@ server <- function(input, output){
         heatmap  
         
     })
-    
-    output$Concept <- renderImage({tags$img(src = "https://drive.google.com/file/d/1gQ9bIlEib3ljFWNaEmkmQJdOQsSFCitv/view?usp=sharing")
-    }) 
     
     output$A1 <- renderText({"AIM 1
 We will statistically estimate the under-representation of COVID-19 data in the State of Wyoming"
@@ -207,6 +230,12 @@ Utilizing Exploratory Factor Analysis and Multivariate Analysis, we aim to stati
         semplot
         
     })
+
 }
 
 shinyApp(ui, server)
+
+
+
+
+
